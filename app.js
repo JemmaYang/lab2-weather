@@ -7,10 +7,14 @@ var Flickr = require("node-flickr");
 var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
+app.set('port', (process.env.PORT || 5000));
+
 //Link to mongodb database http://127.0.0.1:28017/
 // mongoose.connect('mongodb://localhost/todoAppTest');
+MONGOLAB_URI='mongodb://yajingyang:yajingyang@ds153669.mlab.com:53669/heroku_ft36kt81';
 
-mongoose.connect('mongodb://jemmayang:1128MAYDAY@ds153659.mlab.com:53659/lab2-weather');
+mongoose.connect(process.env.MONGOLAB_URI);
+
 
 //Data schema in database
 var TodoSchema = new mongoose.Schema({
@@ -113,9 +117,14 @@ app.get('/save/:cityName', function (req, res, next) {
     });
 });
 
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
+// app.listen(process.env.PORT || 3000, function () {
+//   console.log('Example app listening on port 3000!');
+// });
+
+app.listen(app.get('port'), function() {
+  console.log('Node app is running on port', app.get('port'));
 });
+
 
 
 
