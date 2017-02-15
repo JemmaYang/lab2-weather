@@ -1,0 +1,20 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.1",
+    "fs": "0.0.1-security",
+    "mongodb": "^2.2.24",
+    "mongoose": "^4.8.2",
+    "node-flickr": "^1.0.0",
+    "openweather-apis": "^3.0.2",
+    "path": "^0.12.7"
+  }
+}
