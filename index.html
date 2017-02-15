@@ -1,0 +1,204 @@
+<html>
+	<head>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+		<link rel="stylesheet" href="public/style.css">
+	</head>
+<body>
+    <div id="header">
+		<div id="table">
+		<div><img class="headImg" id = "cityImg" src="public/image01.jpg"></div>
+		<div><img class="headImg" id = "cityImg02" src="public/image02.jpg"></div>
+		</div>
+
+		<form id = "search">
+		<input id="ctname" type="text" name="cityname" placeholder="Enter a city name..."> 
+
+		<div><input id="city" type="button" value="Get Weather" onclick="getCityName()"></div>
+
+		<div id = "printName"></div>
+		</form>
+
+
+
+		<form id = "save">
+		<div><input id="saveButtom" type="button" value="Save City" onclick="saveCityInfo()"></div>
+		</form>
+
+    </div>
+
+		<div id="weather">
+		   <div id="leftbar">
+		        <div id = "temp"></div>
+		        <div id = "timeContainer">
+		           <div id = "time"></div>
+		           <div id = "time2"></div>
+		        </div>
+		    </div>
+		    <div id="rightbar">
+		        <div id = "weatherIcon"></div>
+		        <div id = "otherInfo"></div>
+		    </div>			
+		</div>
+        
+        <div id="forcast">
+             <div id="firstForcast" class = "threeForcast">
+             	    <div class = "weekday" id = "firstDay"></div>
+             	    <div  id = "firstIcon"></div>
+             	    <div class = "forTemp" id = "firstTemp"></div>
+             </div>
+
+              <div id="secondForcast" class = "threeForcast">
+             	    <div class = "weekday" id = "secondDay"></div>
+             	    <div id = "secondIcon"></div>
+             	    <div class = "forTemp" id = "secondTemp"></div>
+             </div>
+
+              <div id="thirdForcast" class = "threeForcast">
+                    <div class = "weekday" id = "thirdDay"></div>
+             	    <div  id = "thirdIcon"></div>
+             	    <div class = "forTemp" id = "thirdTemp"></div>  	
+             </div>
+        	
+        </div>
+
+        <div id="data">
+             <ul id ="number"><li>ID</li></ul>
+             <ul id ="savedCity"><li>City</li></ul>
+             <ul id ="tempreture"><li>Tempreture</li></ul>
+             <ul id ="updateTime"><li>UpdateTime</li></ul>     	
+        </div>
+
+</body>
+
+<script type="text/javascript">
+
+// Print data from Flickr and openweatermap API
+function callAjax(ctname)
+{
+	$.get('/api/'+ctname, function( data ) {
+
+	 var srcCityImage = "https://farm"+ data.cityImage.farm + ".staticflickr.com/" + data.cityImage.server + "/" + data.cityImage.id + "_" + data.cityImage.secret + ".jpg";
+
+	 var srcCityImage02 = "https://farm"+ data.cityImage02.farm + ".staticflickr.com/" + data.cityImage02.server + "/" + data.cityImage02.id + "_" + data.cityImage02.secret + ".jpg";
+
+
+	 document.getElementById("cityImg").setAttribute("src", srcCityImage);
+	 document.getElementById("cityImg02").setAttribute("src", srcCityImage02);
+	 
+  	 var showTemp = document.getElementById("temp");
+  	 var printCity = document.getElementById("printName");
+  	 var showInfo = document.getElementById("otherInfo");
+  	 var showIcon = document.getElementById("weatherIcon");
+
+  	 var printTemp = data.temp;
+  	 var printHum = data.humidity;
+  	 var printPre = data.pressure;
+  	 var printWind = data.wind;
+  	 var printCityname = data.name;
+  	 var printIcon = "http://openweathermap.org/img/w/" + data.icon + ".png";
+
+  	 showTemp.innerHTML = printTemp + " &#x2103;";
+  	 showInfo.innerHTML = "<div>Humidity: " + printHum + "%</div>";
+  	 showInfo.innerHTML += "<div>Pressure: " + printPre + " Pa</div>";
+  	 showInfo.innerHTML += "<div>Wind: " + printWind + " mph</div>";
+  	 showIcon.innerHTML  = "<img id='iconImg'>";
+  	 document.getElementById("iconImg").setAttribute("src", printIcon  ); 
+
+  	 printCity.innerHTML = "Hello, " + printCityname + "!";
+
+     var printFirstTemp = document.getElementById("firstTemp");
+     var printSecondTemp = document.getElementById("secondTemp");
+     var printThirdTemp = document.getElementById("thirdTemp");
+     var printFirstIcon = document.getElementById("firstIcon");
+     var printSecondIcon = document.getElementById("secondIcon");
+     var printThirdIcon = document.getElementById("thirdIcon");
+     var srcFirstIcon = "http://openweathermap.org/img/w/" + data.firstWeather + ".png";
+     var srcSecondIcon = "http://openweathermap.org/img/w/" + data.secondWeather + ".png";
+     var srcThirdIcon = "http://openweathermap.org/img/w/" + data.thirdWeather + ".png";
+
+
+     printFirstTemp.innerHTML = data.firstTempMin + " &#x2103; - " + data.firstTempMax + " &#x2103;";
+     printSecondTemp.innerHTML = data.secondTempMin + " &#x2103; - " + data.secondTempMax + " &#x2103;";
+     printThirdTemp.innerHTML = data.thirdTempMin + " &#x2103; - " + data.thirdTempMax + " &#x2103;";
+
+     printFirstIcon.innerHTML  = "<img id='firstImg' class='forcastIcon'>";
+  	 document.getElementById("firstImg").setAttribute("src", srcFirstIcon);
+  	 printSecondIcon.innerHTML  = "<img id='secondImg' class='forcastIcon'>";
+  	 document.getElementById("secondImg").setAttribute("src",srcSecondIcon);
+  	 printThirdIcon.innerHTML  = "<img id='thirdImg' class='forcastIcon'>";
+  	 document.getElementById("thirdImg").setAttribute("src",srcThirdIcon);
+
+	});
+}
+
+function printTime(){
+	var d = new Date();
+
+    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+    document.getElementById("timeContainer").style.display = 'block';
+    document.getElementById("time").innerHTML = days[d.getDay()];
+    
+    document.getElementById("time2").innerHTML = months[d.getMonth()]+' '+d.getDate()+' '+d.getFullYear();
+
+     document.getElementById("firstDay").innerHTML = days[d.getDay()+1];
+     document.getElementById("secondDay").innerHTML = days[d.getDay()+2];
+     document.getElementById("thirdDay").innerHTML = days[d.getDay()+3];
+
+     document.getElementById("thirdDay").style.display = 'block';
+     document.getElementById("firstDay").style.display = 'block';
+     document.getElementById("secondDay").style.display = 'block';
+
+
+}
+
+function getCityName(){
+	var cityName = document.getElementById("ctname").value;
+
+	if (cityName != ""){
+        callAjax(cityName); 
+        printTime(); 
+	}
+	else{
+		alert("Please enter city name.");
+	}
+}
+
+var countNum = 0;
+
+//save seleted data to database and print to data list
+function saveCityInfo(){
+	var cityName = document.getElementById("ctname").value;
+	$.get('/save/'+cityName, function( data ) {
+		console.log(data);
+
+        countNum = countNum +1;
+		// var row = document.createElement("div");
+		// var id = document.createElement("div");
+		var cityName = document.createElement("li");
+		var tempreture = document.createElement("li");
+		var updateTime = document.createElement("li");
+		var number = document.createElement("li");
+
+        var cityNameText = document.createTextNode(data.name);
+        var tempretureText = document.createTextNode(data.temprature);
+        var updateTimeText = document.createTextNode(data.updated_at);
+        var numberText = document.createTextNode(countNum);
+
+        cityName.appendChild(cityNameText);
+        tempreture.appendChild(tempretureText);
+        updateTime.appendChild(updateTimeText);
+        number.appendChild(numberText);
+
+        document.getElementById("savedCity").appendChild(cityName);
+        document.getElementById("tempreture").appendChild(tempreture);
+        document.getElementById("updateTime").appendChild(updateTime);
+        document.getElementById("number").appendChild(number);
+
+	});
+
+}
+
+</script>
+</html>
